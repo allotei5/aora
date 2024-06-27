@@ -7,6 +7,7 @@ import { images } from '../../constants'
 import FormField from '../../components/FormField'
 import { Link, router } from 'expo-router'
 import { createUser } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 const SignUp = () => {
   const [ form, setForm] = useState({
@@ -15,26 +16,27 @@ const SignUp = () => {
     password: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const {setUser, setIsLogged} = useGlobalContext()
 
   const submit = async () => {
-    if (!form.username || !form.email || !form.password) {
-      Alert.alert('Error', 'Please fill in all the fields')
+    if (form.username === "" || form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
     }
 
-    setIsSubmitting(true)
-
+    setIsSubmitting(true);
     try {
-      const res = await createUser(form.email, form.password, form.username)
+      const result = await createUser(form.email, form.password, form.username);
+      setUser(result);
+      setIsLogged(true);
 
-      // set to global state
-      router.replace('/home')
+      router.replace("/home");
     } catch (error) {
-      Alert.alert('Error', error.message)
+      Alert.alert("Error", error.message);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-    
-  }
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
