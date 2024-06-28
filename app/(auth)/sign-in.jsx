@@ -7,12 +7,17 @@ import { images } from '../../constants'
 import FormField from '../../components/FormField'
 import { Link } from 'expo-router'
 import { signIn } from '../../lib/appwrite'
+import { getCurrentUser } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/GlobalProvider'
+import { router } from 'expo-router'
 
 const SignIn = () => {
+
   const [ form, setForm] = useState({
     email: '',
     password: ''
   })
+  const { setUser, setIsLogged } = useGlobalContext();
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const submit = async () => {
